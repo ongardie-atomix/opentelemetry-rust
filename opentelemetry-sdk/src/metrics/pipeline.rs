@@ -279,6 +279,15 @@ where
                 stream.unit = Some(inst.unit.clone());
             }
 
+            if stream.aggregation.is_none() {
+                if let Some(boundaries) = boundaries {
+                    stream.aggregation = Some(Aggregation::ExplicitBucketHistogram {
+                        boundaries: boundaries.to_vec(),
+                        record_min_max: true,
+                    });
+                }
+            }
+
             let id = self.inst_id(kind, &stream);
             if seen.contains(&id) {
                 continue; // This aggregator has already been added
